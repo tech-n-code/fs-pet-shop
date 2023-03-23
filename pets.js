@@ -46,12 +46,14 @@ function read(index) {
         let pets = JSON.parse(data);
         if (index === undefined) {
             console.log(pets);
+            return pets;
         } else if (isNaN(index)) {
             console.log("Index is not a number.");
         } else if (index > pets.length - 1){
             console.log(`Index needs to be smaller than ${pets.length - 1}.`);
         } else {
             console.log(pets[Math.abs(index)]);
+            return pets[Math.abs(index)];
         }
     });
 }
@@ -60,8 +62,8 @@ function create(petAge, petKind, petName) {
     fs.readFile("./pets.json", "utf-8", function(err, data) {
         let pets = JSON.parse(data);
         pets.push({age: Number(petAge), kind: petKind, name: petName});
+        console.log(`Created { age: ${Number(petAge)}, kind: '${petKind}', name: '${petName} }`);
         let petsJSON = JSON.stringify(pets)
-        console.log(petsJSON);
         fs.writeFile("./pets.json", petsJSON, "utf-8", function(err) {
             if (err) throw err;
             console.log("The file has been saved!")

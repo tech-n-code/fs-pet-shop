@@ -2,5 +2,7 @@
   { "age": 8, "kind": "ape", "name": "tony" },
   { "age": 6, "kind": "reptile", "name": "jake" },
   { "age": 7, "kind": "rainbow", "name": "fido" },
-  { "age": 5, "kind": "snake", "name": "Buttons" }
+  { "age": 5, "kind": "snake", "name": "Buttons" },
+  { "age": 2, "kind": "dog", "name": "mango" },
+  { "age": 5, "kind": "human", "name": "Jeff" }
 ]
