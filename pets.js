@@ -47,12 +47,11 @@ function read(index) {
         if (index === undefined) {
             console.log(pets);
         } else if (isNaN(index)) {
-            console.log("Index not a number.");
-        } else if (index > pets.length){
-            console.log("Index too big.");
+            console.log("Index is not a number.");
+        } else if (index > pets.length - 1){
+            console.log(`Index needs to be smaller than ${pets.length - 1}.`);
         } else {
-            petInxesAbs = pets[Math.abs(index)];
-            console.log(petInxesAbs);
+            console.log(pets[Math.abs(index)]);
         }
     });
 }
