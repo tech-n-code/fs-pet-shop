@@ -37,24 +37,30 @@ function startServer() {
             });
         } else if (req.method  === "GET" && req.url.startsWith("/pets/"))  {
             let index = parseInt(req.url.substring(6));
-            if (index < 0 || index > petsMaxIndex - 1) {
+            if (Number.isInteger(index)) {
+                if (index < 0 || index > petsMaxIndex - 1) {
+                    res.statusCode = 404;
+                    res.setHeader("Content-Type", "text/plain");
+                    res.end("Not Found");
+                } else {
+                    fs.readFile(petsPath, "utf-8", function(err, data) {
+                        if (err) {
+                            console.error(err);
+                            res.statusCode = 500;
+                            res.setHeader("Content-Type", "text/plain");
+                            res.end("Internal Server Error");
+                            return;
+                        }
+                    let pets = JSON.parse(data);
+                    let petJSON = JSON.stringify(pets[index]);
+                    res.setHeader("Content-Type", "application/json");
+                    res.end(petJSON);
+                    });
+                }
+            } else {
                 res.statusCode = 404;
                 res.setHeader("Content-Type", "text/plain");
                 res.end("Not Found");
-            } else {
-                fs.readFile(petsPath, "utf-8", function(err, data) {
-                    if (err) {
-                        console.error(err);
-                        res.statusCode = 500;
-                        res.setHeader("Content-Type", "text/plain");
-                        res.end("Internal Server Error");
-                        return;
-                    }
-                let pets = JSON.parse(data);
-                let petJSON = JSON.stringify(pets[index]);
-                res.setHeader("Content-Type", "application/json");
-                res.end(petJSON);
-                });
             }
         } else {
             res.statusCode = 404;
