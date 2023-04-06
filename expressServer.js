@@ -65,9 +65,57 @@ function startServer() {
             }
         });
     });
+
+    app.post("/pets", function(req, res) {
+        let body = "";
+        req.on("data", function(chunk) {
+            body += chunk.toString();
+        });
+        req.on("end", function() {
+            let params = JSON.parse(body);
+            console.log(params);
+            let petAge = parseInt(params.age);
+            let petKind = params.kind;
+            let petName = params.name;
+            if (isNaN(petAge) || !petKind || !petName) {
+                res.statusCode = 400;
+                res.setHeader("Content-Type", "text/plain");
+                res.end("Bad Request");
+                return;
+            }
+            fs.readFile(petsPath, "utf-8", function(err, data) {
+                if (err) {
+                    console.error(err);
+                    res.statusCode = 500;
+                    res.setHeader("Content-Type", "text/plain");
+                    res.end("Internal Server Error");
+                    return;
+                }
+                let pets = JSON.parse(data);
+                let newPet = {
+                    age: Number(petAge),
+                    kind: petKind,
+                    name: petName
+                };
+                pets.push(newPet);
+                let petsJSON = JSON.stringify(pets);
+                fs.writeFile(petsPath, petsJSON, function(err) {
+                    if (err) {
+                        console.error(err);
+                        res.statusCode = 500;
+                        res.setHeader("Content-Type", "text/plain");
+                        res.end("Internal Server Error");
+                        return;
+                    }
+                    res.statusCode = 200;
+                    res.setHeader("Content-Type", "application/json");
+                    res.end(JSON.stringify(newPet));
+                 })
+            });
+        });
+    });
     
     app.listen(port, function() {
         console.log(`Server is listening on port ${port}`)
     });
 }
-
